@@ -8,16 +8,15 @@ function App() {
   const [description, setDescription] = useState('');
   const [backendStatus, setBackendStatus] = useState('Checking...');
 
-  // Test backend connection on component mount
+  // ✅ Use environment variable or fallback to localhost
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+  // ✅ Test backend connection on component mount
   useEffect(() => {
-    axios.get('http://localhost:5000/health')
-      .then(response => {
-        setBackendStatus('Connected to backend ✓');
-      })
-      .catch(error => {
-        setBackendStatus('Backend connection failed ✗');
-      });
-  }, []);
+    axios.get(`${API_BASE_URL}/health`)
+      .then(() => setBackendStatus('Connected to backend ✓'))
+      .catch(() => setBackendStatus('Backend connection failed ✗'));
+  }, [API_BASE_URL]);
 
   const addTask = (e) => {
     e.preventDefault();
